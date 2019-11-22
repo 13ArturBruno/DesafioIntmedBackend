@@ -1,0 +1,138 @@
+*** DOCUMENTAÇÃO API ***
+
+
+
+POST /api/order/
+
+    Cria um pedido(order) para montagem de um computador.
+
+
+    Formato da resposta: JSON
+    Requer autenticação?: Não
+
+
+    HEADERS:
+        Content-type application/json
+
+
+    PARÂMETROS:
+        NOME                REQUERIDO     DESCRIÇÃO
+
+        email                  SIM        String - Email para identificação do pedido do cliente.
+
+        processor              SIM        String - Nome do Processador escolhido .
+
+        motherboard            SIM        String - Nome da Placa mãe escolhida.
+
+        videoboard           OPCIONAL     String - Nome da Placa de video escolhida.
+
+        rammemory              SIM        Array/List - Lista de inteiros contendo os tamanhos das Memórias Ram.
+
+
+    EXEMPLO REQUISIÇÃO:
+
+        curl -X POST \
+          http://127.0.0.1:8000/api/order/ \
+          -H 'Cache-Control: no-cache' \
+          -H 'Content-Type: application/json' \
+          -H 'Postman-Token: 9a304681-6b8e-4ed5-abe8-a8256abb12e7' \
+          -d '{
+            "email": "1233454@gmail.com",
+            "processor": {
+                "product": "Processador Intel Core i5"
+            },
+            "ramMemory": [8],
+            "motherBoard": {
+                "product": "Placa Mãe ASRock Fatal"
+            },
+            "videoBoard": {
+                "product": "Placa de Video Gigabyte Geforce GTX 1060 6GB"
+            }
+        }'
+
+     EXEMPLO RESPOSTA:
+
+        {
+        "message":"Pedido Criado Com Sucesso!"
+        }
+
+
+
+GET /api/order/
+
+    Retorna uma lista com pedidos efetuados.
+
+    Formato da resposta: JSON
+    Requer autenticação?: Não
+
+
+    QUERYSTRING DE FILTRAGEM:
+        PARAMENTRO            DESCRIÇÃO
+
+        *** filtragem ***
+
+        email                 Retorna todos os pedidos filtrados pelo email.
+
+        processor             Retorna todos os pedidos filtrados pelo nome do Processador.
+
+        motherboard           Retorna todos os pedidos filtrados pela nome da Placa mãe.
+
+        videoboard            Retorna todos os pedidos filtrados pela nome da Placa de video.
+
+        rammemory             Retorna todos os pedidos filtrados pelo tamanho da memória.
+
+
+        EXEMPLO:
+            /api/order/?email=teste@teste.com&rammemory=8
+
+
+        *** ordenação ***
+
+        ordering              Retorna todos os pedidos ordenados pelo email.
+
+
+        EXEMPLO:
+            /api/order/?ordering=email
+
+
+    EXEMPLO REQUISIÇÃO:
+
+        curl -X GET \
+          'http://127.0.0.1:8000/api/order/?email=teste@teste.com&processor=Processador%20Intel%20Core%20i5' \
+          -H 'Cache-Control: no-cache' \
+          -H 'Content-Type: application/json' \
+          -H 'Postman-Token: 28d7aed4-8ac0-4fa8-a198-7f41951cffe5'
+
+
+     EXEMPLO RESPOSTA:
+
+        [
+            {
+                "email": "teste@teste.com",
+                "processor": {
+                    "product": "Processador Intel Core i5"
+                },
+                "ramMemory": [
+                    {
+                        "product": "Hiper X",
+                        "size": 8
+                    }
+                ],
+                "motherBoard": {
+                    "product": "Placa Mãe ASRock Fatal"
+                },
+                "videoBoard": {
+                    "product": "Placa de Video PNY RTX 2060 6GB"
+                }
+            }
+        ]
+
+
+
+
+
+
+
+
+
+

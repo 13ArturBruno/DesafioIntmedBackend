@@ -1,6 +1,4 @@
-from django.core.exceptions import ValidationError
-from django.http import Http404
-from rest_framework.decorators import action
+
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -14,16 +12,17 @@ from products.models import Processor, RamMemory, MotherBoard, VideoBoard
 
 class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
-    serializer_class = [OrderSerializer, ]
+    serializer_class = OrderSerializer
     permission_classes = [AllowAny]
+    ordering_fields = '__all__'
 
     def create(self, request):
         try:
             email = request.data['email']
-            processor = request.data['processor']
-            ram_memory = request.data['ram_memory']
-            mother_board = request.data['mother_board']
-            video_board = request.data['video_board']
+            processor = request.data['processor']['product']
+            ram_memory = request.data['ramMemory']
+            mother_board = request.data['motherBoard']['product']
+            video_board = request.data['videoBoard']['product']
         except:
             return Response(data={"detail": "Ocorreu um erro ao captura os dados informados!"}, status=400)
 
@@ -118,6 +117,46 @@ class OrderViewSet(ModelViewSet):
                 status=400)
 
     def list(self, request, *args, **kwargs):
-        orders = self.queryset.filter()
-        serializer_class = OrderSerializer(orders, many=True)
+        queryset = Order.objects.all()
+
+        email = request.query_params.get('email', None)
+        processor = request.query_params.get('processor', None)
+        motherboard = request.query_params.get('motherboard', None)
+        videoboard = request.query_params.get('videoboard', None)
+        rammemory = request.query_params.get('rammemory', None)
+
+        ordering = request.query_params.get('ordering', None)
+
+
+
+        if email is None:
+            pass
+        else:
+            queryset = queryset.filter(email=email)
+
+        if processor is None:
+            pass
+        else:
+            queryset = queryset.filter(processor__product=processor)
+
+        if motherboard is None:
+            pass
+        else:
+            queryset = queryset.filter(motherBoard__product=motherboard)
+
+        if rammemory is None:
+            pass
+        else:
+            queryset = queryset.filter(ramMemory__size=rammemory)
+
+        if videoboard is None:
+            pass
+        else:
+            queryset = queryset.filter(videoBoard__product=videoboard)
+
+        if ordering == 'email':
+            queryset = queryset.order_by(ordering)
+
+
+        serializer_class = OrderSerializer(queryset, many=True)
         return Response(serializer_class.data)
