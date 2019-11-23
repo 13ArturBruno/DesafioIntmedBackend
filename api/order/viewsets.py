@@ -1,4 +1,4 @@
-
+from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -24,7 +24,7 @@ class OrderViewSet(ModelViewSet):
             mother_board = request.data['motherBoard']['product']
             video_board = request.data['videoBoard']['product']
         except:
-            return Response(data={"detail": "Ocorreu um erro ao captura os dados informados!"}, status=400)
+            return Response(data={"detail": "Ocorreu um erro ao capturar os dados informados!"}, status=400)
 
         if email is None:
             return Response(data={"detail": "É necessário informar seu email para efetuar o pedido!"}, status=400)
@@ -57,7 +57,7 @@ class OrderViewSet(ModelViewSet):
 
         try:
             if mother_board.videoOnboard:
-                if video_board is None:
+                if video_board is None or len(video_board) == 0:
                     pass
                 else:
                     video_board = VideoBoard.objects.get(product=video_board)
@@ -85,7 +85,7 @@ class OrderViewSet(ModelViewSet):
 
                         return Response(
                             data={'message': "Pedido Criado Com Sucesso!"},
-                            status=200)
+                            status=201)
 
                     else:
                         order = Order.objects.create(
@@ -102,7 +102,7 @@ class OrderViewSet(ModelViewSet):
 
                         return Response(
                             data={'message': "Pedido Criado Com Sucesso!"},
-                            status=200)
+                            status=201)
                 else:
                     return Response(
                         data={'detail': "Capacidade de Memória Ram para a Placa Mãe especificada foi excedida!"},
@@ -157,6 +157,6 @@ class OrderViewSet(ModelViewSet):
         if ordering == 'email':
             queryset = queryset.order_by(ordering)
 
-
         serializer_class = OrderSerializer(queryset, many=True)
         return Response(serializer_class.data)
+

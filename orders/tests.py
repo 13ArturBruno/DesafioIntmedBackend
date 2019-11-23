@@ -129,9 +129,17 @@ class APITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Order.objects.count(), 1)
 
-    def test_create_order_without_videoboard_and_without_onboard(self):
+    def test_create_order_processor_without_support_motherboard(self):
         url = 'http://localhost:8000/api/order/'
         payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [8,4],\"motherBoard\": {\"product\": \"Placa Mãe Gigabyte\"},\"videoBoard\": {\"product\": \"Placa de Video PNY RTX 2060 6GB\"}}"
+        response = self.client.post(url, data=payload, content_type="application/json")
+        print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Order.objects.count(), 0)
+
+    def test_create_order_without_memory_ram(self):
+        url = 'http://localhost:8000/api/order/'
+        payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [],\"motherBoard\": {\"product\": \"Placa Mãe ASRock Fatal\"},\"videoBoard\": {\"product\": \"Placa de Video PNY RTX 2060 6GB\"}}"
         response = self.client.post(url, data=payload, content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Order.objects.count(), 0)
