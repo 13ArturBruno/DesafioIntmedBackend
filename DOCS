@@ -32,7 +32,7 @@ POST /api/order/
     EXEMPLO REQUISIÇÃO:
 
         curl -X POST \
-          http://127.0.0.1:8000/api/order/ \
+          http://localhost:8000/api/order/ \
           -H 'Cache-Control: no-cache' \
           -H 'Content-Type: application/json' \
           -H 'Postman-Token: 9a304681-6b8e-4ed5-abe8-a8256abb12e7' \
@@ -88,17 +88,19 @@ GET /api/order/
 
         *** ordenação ***
 
-        ordering              Retorna todos os pedidos ordenados pelo email.
+        ordering              Retorna todos os pedidos ordenados por email, processador, placamae, placadevideo, memoriaram.
 
 
         EXEMPLO:
             /api/order/?ordering=email
+            /api/order/?ordering=placamae
+            /api/order/?ordering=memoriaram
 
 
     EXEMPLO REQUISIÇÃO:
 
         curl -X GET \
-          'http://127.0.0.1:8000/api/order/?email=teste@teste.com&processor=Processador%20Intel%20Core%20i5' \
+          'http://localhost:8000/api/order/?email=teste@teste.com&processor=Processador%20Intel%20Core%20i5' \
           -H 'Cache-Control: no-cache' \
           -H 'Content-Type: application/json' \
           -H 'Postman-Token: 28d7aed4-8ac0-4fa8-a198-7f41951cffe5'

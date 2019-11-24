@@ -155,7 +155,19 @@ class OrderViewSet(ModelViewSet):
             queryset = queryset.filter(videoBoard__product__contains=videoboard)
 
         if ordering == 'email':
-            queryset = queryset.order_by(ordering)
+            queryset = queryset.order_by('email')
+
+        if ordering == 'processador':
+            queryset = queryset.order_by('processor')
+
+        if ordering == 'memoriaram':
+            queryset = queryset.order_by('ramMemory__size')
+
+        if ordering == 'placadevideo':
+            queryset = queryset.order_by('videoBoard')
+
+        if ordering == 'placamae':
+            queryset = queryset.order_by('motherBoard__product')
 
         serializer_class = OrderSerializer(queryset, many=True)
         return Response(serializer_class.data)
