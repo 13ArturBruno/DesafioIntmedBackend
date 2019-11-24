@@ -132,27 +132,27 @@ class OrderViewSet(ModelViewSet):
         if email is None:
             pass
         else:
-            queryset = queryset.filter(email=email)
+            queryset = queryset.filter(email__contains=email)
 
         if processor is None:
             pass
         else:
-            queryset = queryset.filter(processor__product=processor)
+            queryset = queryset.filter(processor__product__contains=processor)
 
         if motherboard is None:
             pass
         else:
-            queryset = queryset.filter(motherBoard__product=motherboard)
+            queryset = queryset.filter(motherBoard__product__contains=motherboard)
 
         if rammemory is None:
             pass
         else:
-            queryset = queryset.filter(ramMemory__size=rammemory)
+            queryset = queryset.filter(ramMemory__size__contains=rammemory)
 
         if videoboard is None:
             pass
         else:
-            queryset = queryset.filter(videoBoard__product=videoboard)
+            queryset = queryset.filter(videoBoard__product__contains=videoboard)
 
         if ordering == 'email':
             queryset = queryset.order_by(ordering)

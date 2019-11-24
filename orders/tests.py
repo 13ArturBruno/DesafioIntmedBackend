@@ -59,86 +59,85 @@ class APITests(APITestCase):
         VideoBoard.objects.create(product="Placa de Video Gigabyte Geforce GTX 1060 6GB")
 
     def test_listing_all_orders(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_listing_orders_with_data(self):
-        url = 'http://localhost:8000/api/order/?email=teste@teste.com'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/?email=teste@teste.com'
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_ordering_orders_per_email(self):
-        url = 'http://localhost:8000/api/order/?ordering=email'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/?ordering=email'
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_order_passing_correct_data(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [8,4],\"motherBoard\": {\"product\": \"Placa Mãe ASRock Fatal\"},\"videoBoard\": {\"product\": \"Placa de Video PNY RTX 2060 6GB\"}}"
         response = self.client.post(url, data=payload, content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Order.objects.count(), 1)
 
     def test_create_order_without_params(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         payload = "{\"email\": \"\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [8,4],\"motherBoard\": {\"product\": \"Placa Mãe ASRock Fatal\"},\"videoBoard\": {\"product\": \"Placa de Video PNY RTX 2060 6GB\"}}"
         response = self.client.post(url, data=payload, content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Order.objects.count(), 0)
 
     def test_create_order_with_content_type_invalid(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [8,4],\"motherBoard\": {\"product\": \"Placa Mãe ASRock Fatal\"},\"videoBoard\": {\"product\": \"Placa de Video PNY RTX 2060 6GB\"}}"
         response = self.client.post(url, data=payload, content_type="application/text")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Order.objects.count(), 0)
 
     def test_create_order_with_invalid_params(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Invalido\"},\"ramMemory\": [8,4],\"motherBoard\": {\"product\": \"Placa Mãe ASRock Fatal\"},\"videoBoard\": {\"product\": \"Placa de Video PNY RTX 2060 6GB\"}}"
         response = self.client.post(url, data=payload, content_type="application/text")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Order.objects.count(), 0)
 
     def test_create_order_with_memory_capacity_exceeding_motherboard_limit(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [8,64],\"motherBoard\": {\"product\": \"Placa Mãe ASRock Fatal\"},\"videoBoard\": {\"product\": \"Placa de Video PNY RTX 2060 6GB\"}}"
         response = self.client.post(url, data=payload, content_type="application/text")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Order.objects.count(), 0)
 
     def test_create_order_amount_memory_greater_than_motherboard_slots(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [8,8,8,8,4],\"motherBoard\": {\"product\": \"Placa Mãe ASRock Fatal\"},\"videoBoard\": {\"product\": \"Placa de Video PNY RTX 2060 6GB\"}}"
         response = self.client.post(url, data=payload, content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Order.objects.count(), 0)
 
     def test_create_order_without_videoboard_and_without_onboard(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [8,4],\"motherBoard\": {\"product\": \"Placa Mãe Asus Prime\"},\"videoBoard\": {\"product\": \"\"}}"
         response = self.client.post(url, data=payload, content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Order.objects.count(), 0)
 
     def test_create_order_without_videoboard_and_with_onboard(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [8,4],\"motherBoard\": {\"product\": \"Placa Mãe ASRock Fatal\"},\"videoBoard\": {\"product\": \"\"}}"
         response = self.client.post(url, data=payload, content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Order.objects.count(), 1)
 
     def test_create_order_processor_without_support_motherboard(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [8,4],\"motherBoard\": {\"product\": \"Placa Mãe Gigabyte\"},\"videoBoard\": {\"product\": \"Placa de Video PNY RTX 2060 6GB\"}}"
         response = self.client.post(url, data=payload, content_type="application/json")
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Order.objects.count(), 0)
 
     def test_create_order_without_memory_ram(self):
-        url = 'http://localhost:8000/api/order/'
+        url = 'https://silvertec-informatica-backend.herokuapp.com/api/order/'
         payload = "{\"email\": \"teste@teste.com\",\"processor\": {\"product\": \"Processador Intel Core i5\"},\"ramMemory\": [],\"motherBoard\": {\"product\": \"Placa Mãe ASRock Fatal\"},\"videoBoard\": {\"product\": \"Placa de Video PNY RTX 2060 6GB\"}}"
         response = self.client.post(url, data=payload, content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

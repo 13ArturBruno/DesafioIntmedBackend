@@ -24,6 +24,6 @@ from api.routers import routers
 urlpatterns = [
     path('', admin.site.urls),
     path('api/', include(routers.urls)),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
 
 urlpatterns += staticfiles_urlpatterns()
