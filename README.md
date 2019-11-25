@@ -1,7 +1,7 @@
 # DesafioIntmedBackend
 
 ## Como rodar:
- ### 1 - Criar env e ativa-la
+ ### 1 - Criar env (`python 3.7+`) e ativa-la
  ### 2 - pip install -r requirements.txt
  ### 3 - python manage.py runserver
 
